@@ -1,0 +1,29 @@
+<a href="/organizations">Dashboard</a>
+<a href="/logout" data-method="delete">Logout</a>
+
+<h3><%= @organization.name %></h3>
+
+<p><%= @organization.description %></p>
+<% if current_user.groups.include? @organization %>
+	<form action="/members/<%= @organization.id %>/user/<%= current_user.id %>" method="post">
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>"/>
+		<input type="hidden" name="_method" value="delete">
+		<button class="btn btn-danger" type="submit">Leave Group</button>
+	</form>
+<% else %>
+	<form action="/members/<%= @organization.id %>/user" method="post">
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>"/>
+		<button class="btn btn-primary" type="submit">Join Group</button>
+	</form>
+<% end %>
+
+<p>Created by: <%= @organization.user.first_name.titleize %> <%= @organization.user.last_name.titleize %></p>
+
+<p>Members:</p>
+<% unless @organization.members.empty? %>
+	<% @organization.members.each do |member| %>
+		<p><%= member.user.first_name.titleize %> <%= member.user.last_name.titleize %></p>
+	<% end %>
+<% else %>
+	<p>There are no members in this group yet</p>
+<% end %>

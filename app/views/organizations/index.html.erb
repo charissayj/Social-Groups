@@ -1,0 +1,44 @@
+<a href="/logout" data-method="delete">Logout</a>
+
+<div class="row">
+	<div class="col-1"></div>
+	<!-- Registration -->
+	<div class="col-5">
+		<h2>Hi, <%= @user.first_name.titleize %> <%= @user.last_name.titleize %></h2>
+		<p>Here are the organizations you may join:</p>
+		<% @organizations.each do |organization| %>
+			<p><a href="/organizations/<%= organization.id %>"><%= organization.name %></a></p>
+			<ul>
+				<li>Members <%= organization.members.count %></li>
+				<li><%= organization.description %></li>
+				<% if current_user == organization.user %>
+					<li>
+							<form action="/organizations/<%= organization.id %>/user" method="post">
+								<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>"/>
+								<input type="hidden" name="_method" value="delete"/>
+								<input type="submit" value="Delete">
+							</form>
+						<% end %>
+					</li>
+			</ul>
+		<% end %>
+	</div>
+
+	<!-- Login -->
+	<div class="col-5">
+		<h2>Create an organization</h2>
+		<form action="/organizations" method="post">
+			<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token%>"/>
+			<div class="form-group">
+				<label>Org Name:</label>
+				<input type="text" name="organization[name]" class="form-control"/>
+			</div>
+			<div class="form-group">
+				<label>Description:</label>
+				<textarea name="organization[description]"></textarea>
+			</div>
+			<button class="btn btn-primary">Create</button>
+		</form>
+	</div>
+	<div class="col-1"></div>
+</div>
