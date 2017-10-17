@@ -12,8 +12,8 @@ class OrganizationsController < ApplicationController
 		organization.user = user
 
 		if organization.save
+			Member.create(user: current_user, organization: organization)
 			session[:organization_id] = organization.id
-			Member.create(user: current_user, organization: @organization)
 			redirect_to :back
 		else
 			flash[:errors] = organization.errors.full_messages
